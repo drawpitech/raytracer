@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  MIRROR_URL: git@github.com:EpitechPromo2027/B-OOP-400-BDX-4-1-raytracer-jacques.rathier.git
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup CMake build
+        run: cmake -S . -B build
+
+      - name: Build
+        run: cmake --build build
+
+  mirror:
+    name: Push to mirror
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [build]
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror repository
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ env.MIRROR_URL }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
