@@ -10,18 +10,18 @@
 #include <iostream>
 
 namespace rtx::core {
-    Config::Config() = default;
+Config::Config() = default;
 
-    Config::Config(const std::string &path) {
-        readFile(path);
-    }
+Config::Config(const std::string &path) {
+    readFile(path);
+}
 
-    void Config::readFile(const std::string &path) {
-        std::clog << "Config:\tLoading config in \"" << path << "\"...\n";
-        _config.readFile(path);
-    }
+void Config::readFile(const std::string &path) {
+    std::clog << "Config:\tLoading config in \"" << path << "\"...\n";
+    _config.readFile(path);
+}
 
-    Core Config::initCore() {
-        return {};
-    }
-    }  // namespace rtx::core
+Core Config::initCore() {
+    return {};
+}
+}  // namespace rtx::core

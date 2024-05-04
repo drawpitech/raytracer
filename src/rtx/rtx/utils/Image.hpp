@@ -9,12 +9,10 @@
 
 namespace rtx::utils {
 
-class Image {
-
-};
+class Image {};
 
 }  // namespace rtx::utils
 
 namespace rtx {
-    using Image = utils::Image;
-} // namespace rtx
+using Image = utils::Image;
+}  // namespace rtx

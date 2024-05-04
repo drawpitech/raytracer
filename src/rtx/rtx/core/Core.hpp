@@ -10,7 +10,7 @@
 #include <string>
 
 #include "Scene.hpp"
-//#include "Config.hpp"
+// #include "Config.hpp"
 
 namespace rtx::core {
 class Core {

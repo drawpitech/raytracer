@@ -15,22 +15,22 @@
 namespace rtx::core {
 
 class Config {
-    public:
-        Config();
+   public:
+    Config();
 
-//        Config(const Config &) = default;
-//        Config(Config &&) = default;
+    //        Config(const Config &) = default;
+    //        Config(Config &&) = default;
 
+    ~Config() = default;
 
-        ~Config() = default;
+    Config(const std::string &path);
 
-        Config(const std::string &path);
+    void readFile(const std::string &path);
 
-        void readFile(const std::string &path);
+    Core initCore();
 
-        Core initCore();
-    private:
-        libconfig::Config _config;
+   private:
+    libconfig::Config _config;
 };
 
 }  // namespace rtx::core

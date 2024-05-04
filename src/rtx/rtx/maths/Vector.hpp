@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <cmath>
+#include <stdexcept>
+#include <string>
+
 #include "maths_concepts.hpp"
 
 namespace rtx::maths {
@@ -67,7 +71,7 @@ class Vector3 {
         return {_x + v.x(), _y + v.y(), _z + v.z()};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector3 &operator+=(const Vector3<U> &v) {
         _x += v.x();
         _y += v.y();
@@ -80,7 +84,7 @@ class Vector3 {
         return {_x - v.x(), _y - v.y(), _z - v.z()};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector3 &operator-=(const Vector3<U> &v) {
         _x -= v.x();
         _y -= v.y();
@@ -93,7 +97,7 @@ class Vector3 {
         return {_x * v, _y * v, _z * v};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector3 &operator*=(U v) {
         _x *= v;
         _y *= v;
@@ -106,7 +110,7 @@ class Vector3 {
         return {_x / v, _y / v, _z / v};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector3 &operator/=(U v) {
         _x /= v;
         _y /= v;
@@ -194,7 +198,7 @@ class Vector2 {
         return {_x + v.x(), _y + v.y()};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector2 &operator+=(const Vector2<U> &v) {
         _x += v.x();
         _y += v.y();
@@ -206,7 +210,7 @@ class Vector2 {
         return {_x - v.x(), _y - v.y()};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector2 &operator-=(const Vector2<U> &v) {
         _x -= v.x();
         _y -= v.y();
@@ -218,7 +222,7 @@ class Vector2 {
         return {_x * v, _y * v};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector2 &operator*=(U v) {
         _x *= v;
         _y *= v;
@@ -230,7 +234,7 @@ class Vector2 {
         return {_x / v, _y / v};
     }
 
-    template <non_narrowing_convertible_to<T> U>
+    template <NonNarrowingConvertibleTo<T> U>
     Vector2 &operator/=(U v) {
         _x /= v;
         _y /= v;

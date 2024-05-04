@@ -11,7 +11,7 @@
 
 namespace rtx::maths {
 template <typename From, typename To>
-concept non_narrowing_convertible_to =
+concept NonNarrowingConvertibleTo =
     std::convertible_to<From, To> &&
     ((std::is_integral_v<From> && std::is_floating_point_v<To>) ||
      requires(From from) { To{from}; });
@@ -43,4 +43,4 @@ concept Substractable = requires(T a, U b) { a - b; };
 template <typename T, typename U>
     requires Substractable<T, U>
 using substraction_result_t = decltype(std::declval<T>() - std::declval<U>());
-}
+}  // namespace rtx::maths

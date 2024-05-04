@@ -5,7 +5,6 @@
 ** rtx.cpp
 */
 
-
 #pragma once
 
 #include "core/Core.hpp"

@@ -13,6 +13,5 @@ class Scene {
     Scene() = default;
 
    private:
-
 };
 }  // namespace rtx::core

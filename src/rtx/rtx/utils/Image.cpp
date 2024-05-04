@@ -7,6 +7,4 @@
 
 #include "Image.hpp"
 
-namespace rtx::utils {
-
-}  // namespace rtx
+namespace rtx::utils {}  // namespace rtx::utils

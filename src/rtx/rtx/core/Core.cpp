@@ -8,7 +8,6 @@
 #include "Core.hpp"
 
 #include <iostream>
-#include <string>
 
 namespace rtx::core {
 Core::Core() {
