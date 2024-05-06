@@ -5,19 +5,16 @@
 ** main.cpp
 */
 
-#include <iostream>
-// #include <memory>
 #include <bits/std_thread.h>
 
 #include <fstream>
-#include <rtx/basics/Camera.hpp>
-#include <rtx/basics/Sphere.hpp>
-#include <rtx/core/Color.hpp>
+#include <rtx/render/Camera.hpp>
+#include <rtx/render/Primitives/Sphere.hpp>
+#include <rtx/core/Types/Color.hpp>
 #include <rtx/core/Scene.hpp>
 #include <rtx/maths/Matrix.hpp>
 #include <rtx/maths/Point.hpp>
-#include <rtx/utils/PpmBinaryWriter.hpp>
-#include <syncstream>
+#include <rtx/core/Display/PpmBinaryWriter.hpp>
 
 constexpr struct {
     unsigned width;

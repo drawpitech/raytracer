@@ -7,8 +7,10 @@ option(SANITIZER "Enable sanitizers" "NONE")
 option(NATIVE_CPU "Optimize for native CPU" ON)
 
 if (SANITIZER STREQUAL "MEMORY")
+    add_link_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
     add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
 elseif (SANITIZER STREQUAL "THREAD")
+    add_link_options(-fsanitize=thread -fno-omit-frame-pointer)
     add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
 endif ()
 
@@ -28,6 +30,5 @@ endif ()
 project(Raytracer
         LANGUAGES CXX)
 
-add_subdirectory(src)
-
+add_subdirectory(rtx)
 add_subdirectory(app)
