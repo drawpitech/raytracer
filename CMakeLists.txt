@@ -10,23 +10,23 @@ if (SANITIZER STREQUAL "MEMORY")
     add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
 elseif (SANITIZER STREQUAL "THREAD")
     add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
-endif()
+endif ()
 
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options()
-else(CMAKE_BUILD_TYPE STREQUAL "Release")
+else ()
     add_compile_options(-ffast-math)
-endif()
+endif ()
 
 if (NATIVE_CPU)
     add_compile_options(-march=native)
-endif()
+endif ()
 
 
 project(Raytracer
-    LANGUAGES CXX)
+        LANGUAGES CXX)
 
 add_subdirectory(src)
 

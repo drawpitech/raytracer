@@ -19,7 +19,7 @@ class Core {
 
     void render();
 
-    void setScene(const Scene &scene);
+    void setScene(Scene &&scene);
 
    private:
     Scene _scene;

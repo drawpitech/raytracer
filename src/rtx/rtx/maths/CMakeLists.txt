@@ -1,9 +1,12 @@
-add_library(rtx_maths
+add_library(rtx_maths INTERFACE
         Matrix.hpp
         Vector.hpp
-        types.hpp
         maths_concepts.hpp
-        m.cpp
+        Point.hpp
+        Rectangle.hpp
+        Ray.hpp
 )
 
-target_compile_features(rtx_maths PUBLIC cxx_std_20)
+target_compile_features(rtx_maths INTERFACE cxx_std_20)
+
+target_include_directories(rtx_maths INTERFACE ${RTX_INCLUDE_DIRS})

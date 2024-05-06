@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cmath>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 
@@ -19,7 +20,8 @@ template <typename T>
     requires std::is_arithmetic_v<T>
 class Vector3 {
    public:
-    Vector3(T x, T y, T z) : _x(x), _y(y), _z(z) {}
+    constexpr Vector3() = default;
+    constexpr Vector3(T x, T y, T z) : _x(x), _y(y), _z(z) {}
 
     T &at(const std::string &i) {
         if (i == "x") {
@@ -33,7 +35,7 @@ class Vector3 {
         }
         throw std::out_of_range("Vector3::at: invalid index");
     }
-    T &at(const std::string &i) const {
+    constexpr T at(const std::string &i) const {
         if (i == "x") {
             return _x;
         }
@@ -46,13 +48,13 @@ class Vector3 {
         throw std::out_of_range("Vector3::at: invalid index");
     }
 
-    const T &x() const {
+    constexpr T x() const {
         return _x;
     }
-    const T &y() const {
+    constexpr T y() const {
         return _y;
     }
-    const T &z() const {
+    constexpr T z() const {
         return _z;
     }
 
@@ -67,72 +69,55 @@ class Vector3 {
     }
 
     template <Addable<T> U>
-    Vector3<addition_result_t<T, U>> operator+(const Vector3<U> &v) const {
+    constexpr Vector3<addition_result_t<T, U>> operator+(
+        const Vector3<U> &v) const {
         return {_x + v.x(), _y + v.y(), _z + v.z()};
     }
 
-    template <NonNarrowingConvertibleTo<T> U>
-    Vector3 &operator+=(const Vector3<U> &v) {
-        _x += v.x();
-        _y += v.y();
-        _z += v.z();
-        return *this;
-    }
-
     template <Substractable<T> U>
-    Vector3<substraction_result_t<T, U>> operator-(const Vector3<U> &v) const {
+    constexpr Vector3<substraction_result_t<T, U>> operator-(
+        const Vector3<U> &v) const {
         return {_x - v.x(), _y - v.y(), _z - v.z()};
     }
 
-    template <NonNarrowingConvertibleTo<T> U>
-    Vector3 &operator-=(const Vector3<U> &v) {
-        _x -= v.x();
-        _y -= v.y();
-        _z -= v.z();
-        return *this;
+    constexpr Vector3 operator-() const {
+        return {-_x, -_y, -_z};
     }
 
     template <Multiplicable<T> U>
-    Vector3<multiplication_result_t<T, U>> operator*(U v) const {
+    constexpr Vector3<multiplication_result_t<T, U>> operator*(
+        const U v) const {
         return {_x * v, _y * v, _z * v};
     }
 
-    template <NonNarrowingConvertibleTo<T> U>
-    Vector3 &operator*=(U v) {
-        _x *= v;
-        _y *= v;
-        _z *= v;
-        return *this;
-    }
-
     template <Divisable<T> U>
-    Vector3<division_result_t<T, U>> operator/(U v) const {
+    constexpr Vector3<division_result_t<T, U>> operator/(const U v) const {
         return {_x / v, _y / v, _z / v};
     }
 
-    template <NonNarrowingConvertibleTo<T> U>
-    Vector3 &operator/=(U v) {
-        _x /= v;
-        _y /= v;
-        _z /= v;
-        return *this;
-    }
-
     template <Multiplicable<T> U>
-    multiplication_result_t<T, U> dot(const Vector3<U> &v) const {
+    constexpr multiplication_result_t<T, U> dot(const Vector3<U> &v) const {
         return _x * v.x() + _y * v.y() + _z * v.z();
     }
 
-    T norm() const {
+    constexpr T norm() const {
         return std::sqrt(_x * _x + _y * _y + _z * _z);
     }
 
-    T norm_squared() const {
+    constexpr T normSquared() const {
         return _x * _x + _y * _y + _z * _z;
     }
 
+    [[nodiscard]] constexpr bool isNormalized() const {
+        return std::fabs(normSquared()-1) < std::numeric_limits<double>::epsilon();
+    }
+
+    constexpr Vector3 normalized() const {
+        return *this / norm();
+    }
+
     friend std::ostream &operator<<(std::ostream &os, const Vector3 &v) {
-        return os << "(" << v.x() << ", " << v.y() << ", " << v.z() << ")";
+        return os << '(' << v.x() << ", " << v.y() << ", " << v.z() << ')';
     }
 
    private:
@@ -159,6 +144,9 @@ class Vector2 {
     }
 
     Vector2(T x, T y) : _x(x), _y(y) {}
+
+    template <typename U>
+    explicit Vector2(const Vector2<U> &v) : _x(v.x()), _y(v.y()) {}
 
     T &at(const std::string &i) {
         if (i == "x") {
@@ -250,8 +238,12 @@ class Vector2 {
         return std::sqrt(_x * _x + _y * _y);
     }
 
-    T norm_squared() const {
+    T normSquared() const {
         return _x * _x + _y * _y;
+    }
+
+    constexpr Vector2 normalized() const {
+        return *this / norm();
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Vector2 &v) {

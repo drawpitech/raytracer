@@ -6,74 +6,50 @@
 */
 
 #include <iostream>
-#include <rtx/maths/Vector.hpp>
-#include <rtx/maths/types.hpp>
-#include <vector>
+// #include <memory>
+#include <bits/std_thread.h>
 
-struct camera {
-    rtx::maths::Point3<int> position{0, 0, 0};
+#include <fstream>
+#include <rtx/basics/Camera.hpp>
+#include <rtx/basics/Sphere.hpp>
+#include <rtx/core/Color.hpp>
+#include <rtx/core/Scene.hpp>
+#include <rtx/maths/Matrix.hpp>
+#include <rtx/maths/Point.hpp>
+#include <rtx/utils/PpmBinaryWriter.hpp>
+#include <syncstream>
 
-    rtx::maths::Vector3<double> angle{0, 0, 0};
-
-    rtx::maths::Vector2<double> resolution{1920, 1080};
-
-    double fov = std::numbers::pi / 2;
-};
-
-struct sphere {
-    rtx::maths::Point3<double> position{0, 0, 0};
-    double radius = 0;
+constexpr struct {
+    unsigned width;
+    unsigned height;
+} RESOLUTION{
+    .width = 1920,
+    .height = 1080,
 };
 
 int main(int argc, char *argv[]) {
-    rtx::maths::Matrix<double, 3, 3> m{{12, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    auto a = rtx::maths::SquareMatrix<double, 3>::identity();
+    rtx::core::Scene scene;
+    rtx::basics::Camera camera(
+        rtx::maths::Point3{0., 0., 0.},
+        rtx::maths::Vector3{0., 0., std::numbers::pi},
+        rtx::maths::Vector2<size_t>{1920, 1080}, std::numbers::pi / 2);
 
-    rtx::maths::SquareMatrix b(a);
+    scene.addObject(std::make_unique<rtx::basics::Sphere>(
+        rtx::maths::Point3{0., -1., 0.}, 0.5));
+    scene.addObject(std::make_unique<rtx::basics::Sphere>(
+        rtx::maths::Point3{0., -1., -100.5}, 100));
 
-    std::clog << b << '\n';
+    auto ri = camera.renderingInstance();
 
-    a *= 2;
+    ri.setScene(scene);
 
-    std::clog << m << '\n' << m.dot(a);
-    // camera cam{{0, 0, 0}, {0, 0, 0}, {1920, 1080}, std::numbers::pi};
-    // sphere s{{3, 3, 2}, 1};
-    // std::clog << cam.position << "\n";
-    // std::cout << "P6\n"
-    //           << cam.resolution.x() << " " << cam.resolution.y() << "\n";
-    // std::cout << "255\n";
-    //
-    // for (int i = 0; i < 1080; i++) {
-    //     for (int j = 0; j < 1920; j++) {
-    //         rtx::maths::Vector2 v{
-    //             cam.angle.x() + (j / cam.resolution.x() * cam.fov),
-    //             cam.angle.y() + (i / cam.resolution.y() * cam.fov *
-    //                              (cam.resolution.y() / cam.resolution.x())),
-    //         };
-    //
-    //         // std::clog << v << "\n";
-    //         rtx::maths::Vector3 v3{
-    //             std::sin(v.x() * std::cos(v.y())),
-    //             std::cos(v.x()) * std::cos(v.y()), std::sin(v.y())};
-    //
-    //         auto a = v3.norm();
-    //         auto b = 2 * v3.dot(cam.position - s.position);
-    //         auto c =
-    //             (cam.position - s.position).dot(cam.position - s.position) -
-    //             (s.radius * s.radius);
-    //
-    //         auto d = (b * b) - 4 * a * c;
-    //         // std::clog << d << "\n";
-    //
-    //         unsigned char r = (255. / 1080.) * i;
-    //         unsigned char g = (255. / 1920.) * j;
-    //         unsigned char b2 = '\xFF';
-    //
-    //         if (d < 0) {
-    //             std::cout << r << g << b2;
-    //         } else {
-    //             std::cout << '\0' << '\0' << '\0';
-    //         }
-    //     }
-    // }
+    ri.render();
+
+    // std::thread t(&rtx::core::RenderingInstance::render, &ri);
+
+    // t.join();
+
+    std::ofstream ofs("image.ppm");
+
+    rtx::utils::PpmBinaryWriter{ri.image()}.write(ofs);
 }

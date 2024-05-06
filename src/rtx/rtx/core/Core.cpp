@@ -18,7 +18,7 @@ void Core::render() {
     std::clog << "Core:\tRendering...\n";
 }
 
-void Core::setScene(const Scene& scene) {
-    _scene = scene;
+void Core::setScene(Scene &&scene) {
+    _scene = std::move(scene);
 }
 }  // namespace rtx::core
