@@ -7,6 +7,8 @@
 
 #include "RenderingInstance.hpp"
 
+#include <rtx/render/RayRender.hpp>
+
 #include "Scene.hpp"
 
 namespace rtx::core {
@@ -21,21 +23,7 @@ void RenderingInstance::render() {
         for (size_t j = 0; j < _resolution.y(); j++) {
             auto ray =
                 _viewport.ray({static_cast<double>(i), static_cast<double>(j)});
-            std::optional<Hitpoint> hitpoint;
-            for (const auto& object : _scene->objects()) {
-                const auto tmp = object->hit(ray);
-                if (!tmp) {
-                    continue;
-                }
-                if (!hitpoint || tmp->distance() < hitpoint->distance()) {
-                    hitpoint = tmp;
-                }
-            }
-            if (hitpoint) {
-                _image.setPixel({i, j}, Color::fromNormal(hitpoint->normal()));
-            } else {
-                _image.setPixel({i, j}, sky(ray.direction().normalized().z()));
-            }
+            _image.setPixel({i, j}, render::RayRender{ray, *_scene}.render());
         }
     }
 }

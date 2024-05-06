@@ -45,7 +45,7 @@ Color Color::operator+(const Color& c) const {
     return {_r + c._r, _g + c._g, _b + c._b};
 }
 
-Color sky(double t) {
+Color Color::sky(const double t) {
     const auto a = 0.5 * (t + 1);
     return (1 - a) * Color(1, 1, 1) + a * Color(0, 0, 1);
 }

@@ -4,6 +4,7 @@ add_subdirectory(rtx/core)
 add_subdirectory(rtx/utils)
 add_subdirectory(rtx/maths)
 add_subdirectory(rtx/basics)
+add_subdirectory(rtx/render)
 
 add_library(rtx INTERFACE)
 
@@ -11,6 +12,7 @@ target_link_libraries(rtx INTERFACE rtx_core)
 target_link_libraries(rtx INTERFACE rtx_utils)
 target_link_libraries(rtx INTERFACE rtx_maths)
 target_link_libraries(rtx INTERFACE rtx_basics)
+target_link_libraries(rtx INTERFACE rtx_render)
 
 
 message(STATUS "rtx include dirs: ${RTX_INCLUDE_DIRS}")

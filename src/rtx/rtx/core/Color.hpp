@@ -37,12 +37,12 @@ class Color {
 
     Color operator+(const Color &c) const;
 
+    static Color sky(double t);
+
    private:
     double _r{0};
     double _g{0};
     double _b{0};
 };
-
-Color sky(double t);
 
 }  // namespace rtx::core
