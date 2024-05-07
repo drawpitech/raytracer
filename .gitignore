@@ -1,5 +1,7 @@
 build
+.build
 result
 image.ppm
 .vscode
 .cache
+*.ppm
