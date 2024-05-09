@@ -17,12 +17,12 @@ namespace rtx::maths {
 template <typename T>
 class Ray3 {
    public:
-    Ray3(Point3<T> origin, Vector3<T> direction)
-        : _origin{origin}, _direction{direction} {}
+    Ray3(Point3<T> origin, Vector3<T> direction) : _origin{origin}, _direction{direction} {}
 
     Point3<T> &origin() {
         return _origin;
     }
+
     [[nodiscard]] const Point3<T> &origin() const {
         return _origin;
     }
@@ -30,6 +30,7 @@ class Ray3 {
     Vector3<T> &direction() {
         return _direction;
     }
+
     [[nodiscard]] const Vector3<T> &direction() const {
         return _direction;
     }

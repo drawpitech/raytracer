@@ -21,6 +21,7 @@ template <typename T>
 class Vector3 {
    public:
     constexpr Vector3() = default;
+
     constexpr Vector3(T x, T y, T z) : _x(x), _y(y), _z(z) {}
 
     T &at(const std::string &i) {
@@ -35,6 +36,7 @@ class Vector3 {
         }
         throw std::out_of_range("Vector3::at: invalid index");
     }
+
     constexpr T at(const std::string &i) const {
         if (i == "x") {
             return _x;
@@ -51,9 +53,11 @@ class Vector3 {
     constexpr T x() const {
         return _x;
     }
+
     constexpr T y() const {
         return _y;
     }
+
     constexpr T z() const {
         return _z;
     }
@@ -61,22 +65,22 @@ class Vector3 {
     T &x() {
         return _x;
     }
+
     T &y() {
         return _y;
     }
+
     T &z() {
         return _z;
     }
 
     template <Addable<T> U>
-    constexpr Vector3<addition_result_t<T, U>> operator+(
-        const Vector3<U> &v) const {
+    constexpr Vector3<addition_result_t<T, U>> operator+(const Vector3<U> &v) const {
         return {_x + v.x(), _y + v.y(), _z + v.z()};
     }
 
     template <Substractable<T> U>
-    constexpr Vector3<substraction_result_t<T, U>> operator-(
-        const Vector3<U> &v) const {
+    constexpr Vector3<substraction_result_t<T, U>> operator-(const Vector3<U> &v) const {
         return {_x - v.x(), _y - v.y(), _z - v.z()};
     }
 
@@ -85,8 +89,7 @@ class Vector3 {
     }
 
     template <Multiplicable<T> U>
-    constexpr Vector3<multiplication_result_t<T, U>> operator*(
-        const U v) const {
+    constexpr Vector3<multiplication_result_t<T, U>> operator*(const U v) const {
         return {_x * v, _y * v, _z * v};
     }
 
@@ -109,7 +112,7 @@ class Vector3 {
     }
 
     [[nodiscard]] constexpr bool isNormalized() const {
-        return std::fabs(normSquared()-1) < std::numeric_limits<double>::epsilon();
+        return std::fabs(normSquared() - 1) < std::numeric_limits<double>::epsilon();
     }
 
     constexpr Vector3 normalized() const {
@@ -157,6 +160,7 @@ class Vector2 {
         }
         throw std::out_of_range("Vector3::at: invalid index");
     }
+
     const T &at(const std::string &i) const {
         if (i == "x") {
             return _x;
@@ -170,6 +174,7 @@ class Vector2 {
     const T &x() const {
         return _x;
     }
+
     const T &y() const {
         return _y;
     }
@@ -177,6 +182,7 @@ class Vector2 {
     T &x() {
         return _x;
     }
+
     T &y() {
         return _y;
     }

@@ -12,12 +12,11 @@
 namespace rtx::maths {
 template <typename From, typename To>
 concept NonNarrowingConvertibleTo =
-    std::convertible_to<From, To> &&
-    ((std::is_integral_v<From> && std::is_floating_point_v<To>) ||
-     requires(From from) { To{from}; });
+    std::convertible_to<From, To> && ((std::is_integral_v<From> && std::is_floating_point_v<To>) ||
+                                      requires(From from) { To{from}; });
 
 template <typename T, typename U>
-concept Multiplicable = requires(T a, U b) { a* b; };
+concept Multiplicable = requires(T a, U b) { a *b; };
 
 template <typename T, typename U>
     requires Multiplicable<T, U>

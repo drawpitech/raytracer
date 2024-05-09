@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.27)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(SANITIZER "Enable sanitizers" "NONE")
+set(SANITIZER "NONE" CACHE STRING "Enable sanitizers")
+
+#option(SANITIZER "Enable sanitizers" "NONE")
 
 option(NATIVE_CPU "Optimize for native CPU" ON)
 

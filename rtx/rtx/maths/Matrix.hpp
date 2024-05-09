@@ -19,8 +19,7 @@ namespace rtx::maths {
 template <typename T, std::size_t R, size_t C>
     requires std::is_arithmetic_v<T>
 class Matrix {
-    static_assert(
-        R > 0 && C > 0, "Matrix must have at least one row and one column");
+    static_assert(R > 0 && C > 0, "Matrix must have at least one row and one column");
 
    public:
     constexpr Matrix() : _data{} {}
@@ -53,27 +52,28 @@ class Matrix {
     T &at(const std::size_t row, const std::size_t col) {
         return _data.at(row * C + col);
     }
-    [[nodiscard]] constexpr T at(
-        const std::size_t row, const std::size_t col) const {
+
+    [[nodiscard]] constexpr T at(const std::size_t row, const std::size_t col) const {
         return _data.at(row * C + col);
     }
 
     T &at(const std::size_t index) {
         return _data.at(index);
     }
+
     [[nodiscard]] constexpr T at(const std::size_t index) const {
         return _data.at(index);
     }
 
     template <Addable<T> U>
-    constexpr Matrix<addition_result_t<T, U>, R, C> operator+(
-        const Matrix<U, R, C> &m) const {
+    constexpr Matrix<addition_result_t<T, U>, R, C> operator+(const Matrix<U, R, C> &m) const {
         Matrix<addition_result_t<T, U>, R, C> result;
         for (int i = 0; i < R * C; i++) {
             result.at(i) = _data.at(i) + m.at(i);
         }
         return result;
     }
+
     // template <NonNarrowingConvertibleTo<T> U>
     // Matrix &operator+=(const Matrix<U, R, C> &m) {
     //     for (int i = 0; i < R * C; i++) {
@@ -83,8 +83,7 @@ class Matrix {
     // }
 
     template <Substractable<T> U>
-    constexpr Matrix<substraction_result_t<T, U>, R, C> operator-(
-        const Matrix<U, R, C> &m) const {
+    constexpr Matrix<substraction_result_t<T, U>, R, C> operator-(const Matrix<U, R, C> &m) const {
         Matrix<substraction_result_t<T, U>, R, C> result;
         for (int i = 0; i < R * C; i++) {
             result.at(i) = _data.at(i) - m.at(i);
@@ -108,6 +107,7 @@ class Matrix {
         }
         return result;
     }
+
     // template <NonNarrowingConvertibleTo<T> U>
     // Matrix &operator*=(U v) {
     //     for (int i = 0; i < R * C; i++) {
@@ -124,6 +124,7 @@ class Matrix {
         }
         return result;
     }
+
     // template <NonNarrowingConvertibleTo<T> U>
     // Matrix &operator/=(U v) {
     //     for (int i = 0; i < R * C; i++) {
@@ -133,8 +134,7 @@ class Matrix {
     // }
 
     template <Multiplicable<T> U, std::size_t C2>
-    constexpr Matrix<multiplication_result_t<T, U>, R, C2> dot(
-        const Matrix<U, C, C2> &m) const {
+    constexpr Matrix<multiplication_result_t<T, U>, R, C2> dot(const Matrix<U, C, C2> &m) const {
         Matrix<multiplication_result_t<T, U>, R, C2> result;
         for (int r = 0; r < R; r++) {
             for (int c = 0; c < C2; c++) {
@@ -214,7 +214,8 @@ constexpr SquareMatrix<T, 4> rotation_matrix(const Vector3<T> &axis, T angle) {
         {t * x * x + c, t * x * y - s * z, t * x * z + s * y, 0},
         {t * x * y + s * z, t * y * y + c, t * y * z - s * x, 0},
         {t * x * z - s * y, t * y * z + s * x, t * z * z + c, 0},
-        {0, 0, 0, 1}};
+        {0, 0, 0, 1}
+    };
 }
 
 template <typename T>
@@ -245,9 +246,7 @@ constexpr SquareMatrix<T, 4> rotation_z_matrix(T angle) {
 
 template <typename T>
 constexpr SquareMatrix<T, 4> rotation_xyz_matrix(T x, T y, T z) {
-    return rotation_x_matrix(x)
-        .dot(rotation_y_matrix(y))
-        .dot(rotation_z_matrix(z));
+    return rotation_x_matrix(x).dot(rotation_y_matrix(y)).dot(rotation_z_matrix(z));
 }
 
 template <typename T>
