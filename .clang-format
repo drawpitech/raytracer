@@ -1,11 +1,39 @@
 ---
-BasedOnStyle: Google
+BasedOnStyle: Chromium
+
+Language: Cpp
+Standard: c++20
 IndentWidth: 4
-TabWidth: 4
-UseTab: Never
-AllowShortBlocksOnASingleLine: Never
+ColumnLimit: 100
+
+AlignAfterOpenBracket: BlockIndent # Break after { in a multi-line block
+InsertBraces: true # Insert {} around single-line blocks
+InsertTrailingCommas: Wrapped
+
+# Disallow multiple elements on a single line (when multi-line is enabled)
+BinPackArguments: false
+BinPackParameters: false
+
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# Group includes
+IncludeBlocks: Regroup
+IncludeCategories:
+    - Regex: "^<rtx/.*"
+      Priority: 1
+    - Regex: "^<.*"
+      Priority: 2
+    - Regex: ".*"
+      Priority: 3
+
+# Disallow single-line blocks
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty # Allow in class declarations
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortFunctionsOnASingleLine: Empty
 AllowShortLoopsOnASingleLine: false
-AlignAfterOpenBracket: AlwaysBreak
-...
+
+SpacesInContainerLiterals: false # No spaces between opening and closing braces
+SeparateDefinitionBlocks: Always # Newline between definition blocks
+
+InsertNewlineAtEOF: true

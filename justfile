@@ -1,25 +1,25 @@
-outdir := env_var_or_default("BUILD_OUT", "build")
-
-# Build (debug)
-debug:
-    cmake -S . -B {{outdir}} -DCMAKE_BUILD_TYPE=Debug -DSANITIZER=NONE
-    cmake --build {{outdir}} -j
+outdir := env("BUILD_OUT", "build")
 
 # Build (release)
-release:
-    cmake -S . -B {{outdir}} -DCMAKE_BUILD_TYPE=Release -DSANITIZER=NONE
-    cmake --build {{outdir}} -j
+release: (_build "Release" "NONE")
+
+# Build (debug)
+debug: (_build "Debug" "NONE")
 
 # Build (address sanitizer)
-asan:
-    cmake -S . -B {{outdir}} -DCMAKE_BUILD_TYPE=Debug -DSANITIZER=MEMORY
-    cmake --build {{outdir}} -j
+asan: (_build "Debug" "MEMORY")
 
 # Build (thread sanitizer)
-tsan:
-    cmake -S . -B {{outdir}} -DCMAKE_BUILD_TYPE=Debug -DSANITIZER=THREAD
-    cmake --build {{outdir}} -j
+tsan: (_build "Debug" "THREAD")
+
+_build type sanitizer:
+    cmake -S . -B {{ outdir }} -DCMAKE_BUILD_TYPE={{ type }} -DSANITIZER={{ sanitizer }}
+    cmake --build {{ outdir }} -j {{ num_cpus() }}
+
+# Format all files
+format:
+    fd --glob "*.{cpp,hpp}" --exec-batch clang-format -i -style=file
 
 # Clean build output
 clean:
-    rm -r {{outdir}}
+    rm -r {{ outdir }}
