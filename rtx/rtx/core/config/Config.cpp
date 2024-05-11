@@ -48,7 +48,11 @@ libconfig::Setting &Config::lookup(const std::string &name, const libconfig::Set
 }
 
 render::Color Config::parseColor(const libconfig::Setting &obj) {
-    return {lookup("r", obj), lookup("g", obj), lookup("b", obj)};
+    return {
+        std::clamp<int>(lookup("r", obj), 0, 255) / 255.,
+        std::clamp<int>(lookup("g", obj), 0, 255) / 255.,
+        std::clamp<int>(lookup("b", obj), 0, 255) / 255.,
+    };
 }
 
 render::Materials Config::parseMaterial(const libconfig::Setting &obj) {
@@ -71,7 +75,7 @@ others::Camera Config::parseCamera() {
 }
 
 others::RenderConfig::RenderMode Config::parseRenderMode(const libconfig::Setting &obj) {
-    std::string mode = lookup("render_mode", obj);
+    std::string mode = lookup_or_else("render_mode", obj, "fast");
     if (mode == "fast") {
         return others::RenderConfig::RenderMode::FAST;
     }
@@ -83,8 +87,11 @@ others::RenderConfig::RenderMode Config::parseRenderMode(const libconfig::Settin
 
 others::Scene Config::parseScene() {
     const auto &cfg = lookup("scene");
-    const auto mode = parseRenderMode(cfg);
-    others::Scene scene{{lookup("samples", cfg), lookup("max_bounces", cfg), mode}};
+    others::Scene scene{{
+        static_cast<unsigned int>(std::max(lookup_or_else("samples", cfg, 10), 0)),
+        static_cast<unsigned int>(std::max(lookup_or_else("max_bounces", cfg, 5), 0)),
+        parseRenderMode(cfg)
+    }};
 
     for (const auto &obj : lookup("objects", cfg)) {
         scene.addObject(ConfigFactory::getObj(lookup("type", obj), obj));

@@ -24,6 +24,12 @@ class Config {
 
     [[nodiscard]] libconfig::Setting &lookup(const std::string &name) const;
     static libconfig::Setting &lookup(const std::string &name, const libconfig::Setting &setting);
+    template <typename T>
+    static T lookup_or_else(const std::string &name, const libconfig::Setting &setting, T default_value) {
+        return setting.exists(name)
+            ? T(setting.lookup(name))
+            : default_value;
+    }
 
     template <typename T>
     static maths::Point3<T> parsePoint(const libconfig::Setting &obj) {
