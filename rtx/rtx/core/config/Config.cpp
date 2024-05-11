@@ -10,6 +10,7 @@
 #include <rtx/core/others/Camera.hpp>
 #include <rtx/maths/Point.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <libconfig.h++>
 
@@ -59,8 +60,8 @@ render::Materials Config::parseMaterial(const libconfig::Setting &obj) {
     return render::Materials{parseColor(Config::lookup("diffuse", obj))};
 }
 
-others::Camera Config::parseCamera() {
-    auto &cam = lookup("camera");
+others::Camera Config::parseCamera() const {
+    const auto &cam = lookup("camera");
 
     return {
         parsePoint<double>(lookup("position", cam)),
@@ -74,24 +75,31 @@ others::Camera Config::parseCamera() {
     };  // through it is in the doc...
 }
 
-others::RenderConfig::RenderMode Config::parseRenderMode(const libconfig::Setting &obj) {
+others::RenderConfig Config::parseRenderConfig(const libconfig::Setting &obj) {
+    using namespace others::settings;
     std::string mode = lookup_or_else("render_mode", obj, "fast");
     if (mode == "fast") {
-        return others::RenderConfig::RenderMode::FAST;
+        const std::string aa = lookup_or_else("antialiasing", obj, "none");
+        if (aa == "none") {
+            return FastRenderConfig{Antialiasing::NONE};
+        }
+        if (aa == "msaa_x4") {
+            return FastRenderConfig{Antialiasing::MSAA_X4};
+        }
+        throw std::runtime_error("Config: Unknown antialiasing mode: " + aa);
     }
     if (mode == "path_tracing") {
-        return others::RenderConfig::RenderMode::PATH_TRACER;
+        return PathTracerRenderConfig{
+            static_cast<unsigned int>(std::max(lookup_or_else("samples", obj, 10), 0)),
+            static_cast<unsigned int>(std::max(lookup_or_else("max_bounces", obj, 5), 0))
+        };
     }
-    throw std::runtime_error("Unknown render mode: " + mode);
+    throw std::runtime_error("Config: Unknown render mode: " + mode);
 }
 
-others::Scene Config::parseScene() {
+others::Scene Config::parseScene() const {
     const auto &cfg = lookup("scene");
-    others::Scene scene{{
-        static_cast<unsigned int>(std::max(lookup_or_else("samples", cfg, 10), 0)),
-        static_cast<unsigned int>(std::max(lookup_or_else("max_bounces", cfg, 5), 0)),
-        parseRenderMode(cfg)
-    }};
+    others::Scene scene{parseRenderConfig(cfg)};
 
     for (const auto &obj : lookup("objects", cfg)) {
         scene.addObject(ConfigFactory::getObj(lookup("type", obj), obj));

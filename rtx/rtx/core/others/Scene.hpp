@@ -12,19 +12,28 @@
 #include <rtx/core/render/RenderableVector.hpp>
 
 #include <memory>
+#include <variant>
 #include <vector>
 
 namespace rtx::others {
-struct RenderConfig {
-    enum class RenderMode : unsigned char {
-        FAST,
-        PATH_TRACER,
-    };
+namespace settings {
+enum class Antialiasing : unsigned char {
+    NONE,
+    MSAA_X4,
+};
 
+struct FastRenderConfig {
+    Antialiasing antialiasing{Antialiasing::MSAA_X4};
+};
+
+struct PathTracerRenderConfig {
     unsigned samples;
     unsigned max_bounces;
-    RenderMode mode;
+    Antialiasing antialiasing;
 };
+};  // namespace settings
+
+using RenderConfig = std::variant<settings::FastRenderConfig, settings::PathTracerRenderConfig>;
 
 class ThreadedScene {
    public:

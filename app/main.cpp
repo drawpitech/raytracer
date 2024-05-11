@@ -12,6 +12,7 @@
 #include <rtx/maths/Point.hpp>
 
 #include <fstream>
+#include <iostream>
 #include <thread>
 
 void realtime(const rtx::others::RenderInstance &ri, std::atomic_bool &cancel) {
@@ -30,14 +31,22 @@ void realtime(const rtx::others::RenderInstance &ri, std::atomic_bool &cancel) {
 
 int main(int argc, char *argv[]) {
     rtx::config::Config config;
-    config.readFile("scene.cfg");
 
-    auto scene = config.parseScene();
-    auto camera = config.parseCamera();
+    std::optional<rtx::others::Scene> scene;
+    std::optional<rtx::others::Camera> camera;
 
-    auto scene2 = scene.threadedScene();
+    try {
+        config.readFile("scene.cfg");
+        scene = config.parseScene();
+        camera = config.parseCamera();
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << '\n';
+        return 1;
+    }
 
-    auto ri = camera.renderingInstance(scene2);
+    auto scene2 = scene.value().threadedScene();
+
+    auto ri = camera.value().renderingInstance(scene2);
 
     std::atomic_bool cancel = false;
 

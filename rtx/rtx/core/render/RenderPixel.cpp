@@ -15,13 +15,20 @@ namespace rtx::render {
 
 Color RenderPixel::render(maths::Point2<size_t> point) const {
     maths::Point2 dpoint{static_cast<double>(point.x()), static_cast<double>(point.y())};
-    Color color = renderRay(_viewport.ray({dpoint.x() + 0.5, dpoint.y() + 0.5}));
-    for (unsigned i = 1; i < _scene->config().samples; i++) {
-        const double x = maths::Random::randomDouble(0., 1.);
-        const double y = maths::Random::randomDouble(0., 1.);
-        color = color + renderRay(_viewport.ray({dpoint.x() + x, dpoint.y() + y}));
+    const auto &config = std::get<others::settings::FastRenderConfig>(_scene->config());
+
+    switch (config.antialiasing) {
+        case others::settings::Antialiasing::NONE:
+            return renderRay(_viewport.ray({dpoint.x() + 0.5, dpoint.y() + 0.5}));
+        case others::settings::Antialiasing::MSAA_X4:
+            return (renderRay(_viewport.ray({dpoint.x() + 0.2, dpoint.y() + 0.6})) +
+                    renderRay(_viewport.ray({dpoint.x() + 0.4, dpoint.y() + 0.2})) +
+                    renderRay(_viewport.ray({dpoint.x() + 0.8, dpoint.y() + 0.6})) +
+                    renderRay(_viewport.ray({dpoint.x() + 0.4, dpoint.y() + 0.8}))) /
+                   4;
+        default:
+            throw std::runtime_error("Unknown antialiasing mode");
     }
-    return color / _scene->config().samples;
 }
 
 Color RenderPixel::renderRay(const maths::Ray3<double> &ray) const {

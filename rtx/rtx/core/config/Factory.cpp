@@ -10,6 +10,7 @@
 #include <rtx/core/render/Plane.hpp>
 #include <rtx/core/render/Sphere.hpp>
 
+#include <algorithm>
 #include <functional>
 #include <libconfig.h++>
 #include <map>

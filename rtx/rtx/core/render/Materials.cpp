@@ -16,7 +16,7 @@ namespace rtx::render {
 Materials::Materials(const Color &diffuse) : _diffuse{diffuse} {}
 
 Color Materials::render(const Hitpoint &hitpoint, const others::ThreadedScene &scene) const {
-    if (scene.config().mode == others::RenderConfig::RenderMode::FAST) {
+    if (std::holds_alternative<others::settings::FastRenderConfig>(scene.config())) {
         return fastRender(hitpoint, scene);
     }
     return {0, 0, 0};

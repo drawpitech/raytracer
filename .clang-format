@@ -20,12 +20,12 @@ ReferenceAlignment: Right
 # Group includes
 IncludeBlocks: Regroup
 IncludeCategories:
-    - Regex: "^<rtx/.*"
-      Priority: 1
-    - Regex: "^<.*"
-      Priority: 2
-    - Regex: ".*"
-      Priority: 3
+    -   Regex: "^<rtx/.*"
+        Priority: 1
+    -   Regex: "^<.*"
+        Priority: 2
+    -   Regex: ".*"
+        Priority: 3
 
 # Disallow single-line blocks
 AllowShortBlocksOnASingleLine: Empty

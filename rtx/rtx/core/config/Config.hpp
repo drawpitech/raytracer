@@ -24,11 +24,11 @@ class Config {
 
     [[nodiscard]] libconfig::Setting &lookup(const std::string &name) const;
     static libconfig::Setting &lookup(const std::string &name, const libconfig::Setting &setting);
+
     template <typename T>
-    static T lookup_or_else(const std::string &name, const libconfig::Setting &setting, T default_value) {
-        return setting.exists(name)
-            ? T(setting.lookup(name))
-            : default_value;
+    static T
+    lookup_or_else(const std::string &name, const libconfig::Setting &setting, T default_value) {
+        return setting.exists(name) ? T(setting.lookup(name)) : default_value;
     }
 
     template <typename T>
@@ -43,9 +43,9 @@ class Config {
 
     static render::Color parseColor(const libconfig::Setting &obj);
     static render::Materials parseMaterial(const libconfig::Setting &obj);
-    others::Camera parseCamera();
-    static others::RenderConfig::RenderMode parseRenderMode(const libconfig::Setting &obj);
-    others::Scene parseScene();
+    [[nodiscard]] others::Camera parseCamera() const;
+    static others::RenderConfig parseRenderConfig(const libconfig::Setting &obj);
+    [[nodiscard]] others::Scene parseScene() const;
 
    private:
     libconfig::Config _config;
