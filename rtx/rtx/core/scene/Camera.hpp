@@ -9,10 +9,9 @@
 
 #include <rtx/maths/Rectangle.hpp>
 
-#include "RenderInstance.hpp"
 #include "Viewport.hpp"
 
-namespace rtx::others {
+namespace rtx::scene {
 
 class Camera {
    public:
@@ -21,7 +20,11 @@ class Camera {
         maths::Vector3<double> angle,
         maths::Vector2<std::size_t> resolution,
         double fov
-    );
+    )
+        : _position{position}, _angle{angle}, _resolution{resolution}, _fov{fov} {}
+
+    Viewport viewport();
+    Viewport viewport(maths::Rectangle2<std::size_t> rect);
 
     maths::Point3<double> &position();
     [[nodiscard]] const maths::Point3<double> &position() const;
@@ -29,17 +32,11 @@ class Camera {
     maths::Vector3<double> &angle();
     [[nodiscard]] const maths::Vector3<double> &angle() const;
 
-    maths::Point2<double> &resolution();
-    [[nodiscard]] const maths::Point2<double> &resolution() const;
+    maths::Vector2<size_t> &resolution();
+    [[nodiscard]] const maths::Vector2<size_t> &resolution() const;
 
     double &fov();
     [[nodiscard]] const double &fov() const;
-
-    Viewport viewport();
-    Viewport viewport(maths::Rectangle2<std::size_t> rect);
-
-    RenderInstance renderingInstance(const ThreadedScene &scene);
-    RenderInstance renderingInstance(maths::Rectangle2<std::size_t> rect);
 
    private:
     maths::Point3<double> _position;
@@ -48,4 +45,4 @@ class Camera {
     double _fov;
 };
 
-}  // namespace rtx::others
+}  // namespace rtx::scene

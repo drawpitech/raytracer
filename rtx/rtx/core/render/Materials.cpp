@@ -7,22 +7,20 @@
 
 #include "Materials.hpp"
 
-#include <rtx/core/others/Scene.hpp>
-
 #include <algorithm>
-#include <iostream>
 
 namespace rtx::render {
+
 Materials::Materials(const Color &diffuse) : _diffuse{diffuse} {}
 
-Color Materials::render(const Hitpoint &hitpoint, const others::ThreadedScene &scene) const {
-    if (std::holds_alternative<others::settings::FastRenderConfig>(scene.config())) {
+Color Materials::render(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
+    if (std::holds_alternative<scene::settings::FastRenderConfig>(scene.config())) {
         return fastRender(hitpoint, scene);
     }
     return {0, 0, 0};
 }
 
-Color Materials::fastRender(const Hitpoint &hitpoint, const others::ThreadedScene &scene) const {
+Color Materials::fastRender(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
     auto c_light = Color{0, 0, 0};
     double weight = 0;
 

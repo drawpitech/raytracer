@@ -20,7 +20,7 @@ class ConfigFactory {
    public:
     static std::unique_ptr<render::IObject>
     getObj(const std::string &type, const libconfig::Setting &obj);
-    static std::unique_ptr<render::DirectionalLights> getLight(const libconfig::Setting &obj);
+    static std::unique_ptr<render::DirectionalLight> getLight(const libconfig::Setting &obj);
     static render::AmbientLight parseAmbientLight(const libconfig::Setting &obj);
 
    private:

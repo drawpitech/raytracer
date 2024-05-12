@@ -12,9 +12,9 @@
 
 namespace rtx::render {
 
-class DirectionalLights {
+class DirectionalLight {
    public:
-    DirectionalLights(maths::Vector3<double> direction, double intensity, render::Color color);
+    DirectionalLight(maths::Vector3<double> direction, double intensity, render::Color color);
 
     [[nodiscard]] maths::Vector3<double> direction() const;
     [[nodiscard]] double intensity() const;

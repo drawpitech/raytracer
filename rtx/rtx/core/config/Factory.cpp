@@ -49,8 +49,8 @@ std::unique_ptr<render::IObject> ConfigFactory::getObj<render::Plane>(const libc
     );
 }
 
-std::unique_ptr<render::DirectionalLights> ConfigFactory::getLight(const libconfig::Setting &obj) {
-    return std::make_unique<render::DirectionalLights>(
+std::unique_ptr<render::DirectionalLight> ConfigFactory::getLight(const libconfig::Setting &obj) {
+    return std::make_unique<render::DirectionalLight>(
         Config::parseVector<double>(Config::lookup("direction", obj)),
         std::clamp<float>(Config::lookup("intensity", obj), 0, 1),
         Config::parseColor(Config::lookup("color", obj))

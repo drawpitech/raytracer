@@ -7,7 +7,7 @@
 
 #include "Config.hpp"
 
-#include <rtx/core/others/Camera.hpp>
+#include <rtx/core/scene/Camera.hpp>
 #include <rtx/maths/Point.hpp>
 
 #include <algorithm>
@@ -60,7 +60,7 @@ render::Materials Config::parseMaterial(const libconfig::Setting &obj) {
     return render::Materials{parseColor(Config::lookup("diffuse", obj))};
 }
 
-others::Camera Config::parseCamera() const {
+scene::Camera Config::parseCamera() const {
     const auto &cam = lookup("camera");
 
     return {
@@ -75,8 +75,8 @@ others::Camera Config::parseCamera() const {
     };  // through it is in the doc...
 }
 
-others::RenderConfig Config::parseRenderConfig(const libconfig::Setting &obj) {
-    using namespace others::settings;
+scene::RenderConfig Config::parseRenderConfig(const libconfig::Setting &obj) {
+    using namespace scene::settings;
     std::string mode = lookup_or_else("render_mode", obj, "fast");
     if (mode == "fast") {
         const std::string aa = lookup_or_else("antialiasing", obj, "none");
@@ -97,9 +97,9 @@ others::RenderConfig Config::parseRenderConfig(const libconfig::Setting &obj) {
     throw std::runtime_error("Config: Unknown render mode: " + mode);
 }
 
-others::Scene Config::parseScene() const {
+scene::Scene Config::parseScene() const {
     const auto &cfg = lookup("scene");
-    others::Scene scene{parseRenderConfig(cfg)};
+    scene::Scene scene{parseRenderConfig(cfg)};
 
     for (const auto &obj : lookup("objects", cfg)) {
         scene.addObject(ConfigFactory::getObj(lookup("type", obj), obj));

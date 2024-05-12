@@ -15,12 +15,12 @@ namespace rtx::render {
 
 Color RenderPixel::render(maths::Point2<size_t> point) const {
     maths::Point2 dpoint{static_cast<double>(point.x()), static_cast<double>(point.y())};
-    const auto &config = std::get<others::settings::FastRenderConfig>(_scene->config());
+    const auto &config = std::get<scene::settings::FastRenderConfig>(_scene->config());
 
     switch (config.antialiasing) {
-        case others::settings::Antialiasing::NONE:
+        case scene::settings::Antialiasing::NONE:
             return renderRay(_viewport.ray({dpoint.x() + 0.5, dpoint.y() + 0.5}));
-        case others::settings::Antialiasing::MSAA_X4:
+        case scene::settings::Antialiasing::MSAA_X4:
             return (renderRay(_viewport.ray({dpoint.x() + 0.2, dpoint.y() + 0.6})) +
                     renderRay(_viewport.ray({dpoint.x() + 0.4, dpoint.y() + 0.2})) +
                     renderRay(_viewport.ray({dpoint.x() + 0.8, dpoint.y() + 0.6})) +

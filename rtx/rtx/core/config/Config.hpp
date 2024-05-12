@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <rtx/core/others/Camera.hpp>
-#include <rtx/core/others/Scene.hpp>
+#include <rtx/core/scene/Camera.hpp>
+#include <rtx/core/scene/Scene.hpp>
 
 #include <libconfig.h++>
 #include <string>
@@ -43,9 +43,9 @@ class Config {
 
     static render::Color parseColor(const libconfig::Setting &obj);
     static render::Materials parseMaterial(const libconfig::Setting &obj);
-    [[nodiscard]] others::Camera parseCamera() const;
-    static others::RenderConfig parseRenderConfig(const libconfig::Setting &obj);
-    [[nodiscard]] others::Scene parseScene() const;
+    [[nodiscard]] scene::Camera parseCamera() const;
+    static scene::RenderConfig parseRenderConfig(const libconfig::Setting &obj);
+    [[nodiscard]] scene::Scene parseScene() const;
 
    private:
     libconfig::Config _config;

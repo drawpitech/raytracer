@@ -9,7 +9,8 @@
 
 #include <iostream>
 
-namespace rtx::others {
+namespace rtx::scene {
+
 Viewport::Viewport(
     maths::Rectangle3<double> rect,
     maths::Vector2<std::size_t> resolution,
@@ -29,4 +30,5 @@ maths::Ray3<double> Viewport::ray(maths::Point2<double> point) const {
 
     return {_position, _position.vectorTo(_origin + _down * (point.y()) + _right * (point.x()))};
 }
-}  // namespace rtx::others
+
+}  // namespace rtx::scene

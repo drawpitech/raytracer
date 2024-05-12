@@ -9,22 +9,22 @@
 
 namespace rtx::render {
 
-DirectionalLights::DirectionalLights(
+DirectionalLight::DirectionalLight(
     maths::Vector3<double> direction,
     double intensity,
     render::Color color
 )
     : _direction{direction.normalized()}, _intensity{intensity}, _color{color} {}
 
-maths::Vector3<double> DirectionalLights::direction() const {
+maths::Vector3<double> DirectionalLight::direction() const {
     return _direction;
 }
 
-double DirectionalLights::intensity() const {
+double DirectionalLight::intensity() const {
     return _intensity;
 }
 
-render::Color DirectionalLights::color() const {
+render::Color DirectionalLight::color() const {
     return _color;
 }
 }  // namespace rtx::render

@@ -11,7 +11,7 @@
 #include <rtx/maths/Ray.hpp>
 #include <rtx/maths/Rectangle.hpp>
 
-namespace rtx::others {
+namespace rtx::scene {
 
 class Viewport {
    public:
@@ -32,4 +32,4 @@ class Viewport {
     maths::Vector3<double> _right;
 };
 
-}  // namespace rtx::others
+}  // namespace rtx::scene

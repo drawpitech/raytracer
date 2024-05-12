@@ -6,74 +6,45 @@
 */
 
 #include <rtx/core/config/Config.hpp>
-#include <rtx/core/display/PpmBinaryWriter.hpp>
-#include <rtx/core/others/Camera.hpp>
-#include <rtx/core/others/Scene.hpp>
+#include <rtx/core/display/PpmDisplay.hpp>
+#include <rtx/core/display/renderer/Renderer.hpp>
+#include <rtx/core/scene/Camera.hpp>
+#include <rtx/core/scene/Scene.hpp>
 #include <rtx/maths/Point.hpp>
 
-#include <fstream>
 #include <iostream>
-#include <thread>
 
-void realtime(const rtx::others::RenderInstance &ri, std::atomic_bool &cancel) {
-    while (!cancel) {
-        std::ofstream ofs("image.ppm");
+namespace {
+void raytracer() {
+    rtx::config::Config config("scene.cfg");
+    auto scene = config.parseScene();
+    auto camera = config.parseCamera();
 
-        rtx::display::PpmBinaryWriter{ri.image()}.write(ofs);
+    rtx::display::PpmDisplay display{camera.resolution()};
+    rtx::display::Renderer renderer{std::move(scene), camera, &display};
 
-        ofs.close();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    std::ofstream ofs("image.ppm");
+    std::cout << "Rendering ..." << std::endl;
+    renderer.startRender();
 
-    rtx::display::PpmBinaryWriter{ri.image()}.write(ofs);
+    std::jthread rt([&display](const std::stop_token &stop_token) {
+        using namespace std::chrono_literals;
+
+        while (!stop_token.stop_requested()) {
+            display.write("image.ppm");
+            std::this_thread::sleep_for(100ms);
+        }
+    });
+
+    renderer.waitRender();
+    display.write("image.ppm");
 }
+}  // namespace
 
 int main(int argc, char *argv[]) {
-    rtx::config::Config config;
-
-    std::optional<rtx::others::Scene> scene;
-    std::optional<rtx::others::Camera> camera;
-
     try {
-        config.readFile("scene.cfg");
-        scene = config.parseScene();
-        camera = config.parseCamera();
+        raytracer();
     } catch (const std::exception &e) {
-        std::cerr << e.what() << '\n';
-        return 1;
+        std::cerr << "A fatal error occurred: " << e.what() << std::endl;
+        return 84;
     }
-
-    auto scene2 = scene.value().threadedScene();
-
-    auto ri = camera.value().renderingInstance(scene2);
-
-    std::atomic_bool cancel = false;
-
-    auto cluster1 = ri.renderCluster({0, 0}, {600, 600});
-    auto cluster2 = ri.renderCluster({600, 0}, {600, 600});
-    auto cluster3 = ri.renderCluster({1200, 0}, {600, 600});
-    auto cluster4 = ri.renderCluster({0, 600}, {600, 600});
-    auto cluster5 = ri.renderCluster({600, 600}, {600, 600});
-    auto cluster6 = ri.renderCluster({1200, 600}, {600, 600});
-
-    std::thread t1(&rtx::others::RenderCluster::render, &cluster1);
-    std::thread t2(&rtx::others::RenderCluster::render, &cluster2);
-    std::thread t3(&rtx::others::RenderCluster::render, &cluster3);
-    std::thread t4(&rtx::others::RenderCluster::render, &cluster4);
-    std::thread t5(&rtx::others::RenderCluster::render, &cluster5);
-    std::thread t6(&rtx::others::RenderCluster::render, &cluster6);
-
-    std::thread rt(&realtime, std::ref(ri), std::ref(cancel));
-
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    t5.join();
-    t6.join();
-
-    cancel = true;
-
-    rt.join();
 }

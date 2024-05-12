@@ -15,15 +15,7 @@
 
 #include "Viewport.hpp"
 
-namespace rtx::others {
-
-Camera::Camera(
-    maths::Point3<double> position,
-    maths::Vector3<double> angle,
-    maths::Vector2<std::size_t> resolution,
-    double fov
-)
-    : _position{position}, _angle{angle}, _resolution{resolution}, _fov{fov} {}
+namespace rtx::scene {
 
 Viewport Camera::viewport() {
     const double tan_hfov = std::tan(_fov / 2);
@@ -42,7 +34,36 @@ Viewport Camera::viewport() {
     return {rect, _resolution, _position};
 }
 
-RenderInstance Camera::renderingInstance(const ThreadedScene &scene) {
-    return {scene, viewport(), _resolution};
+maths::Point3<double> &Camera::position() {
+    return _position;
 }
-}  // namespace rtx::others
+
+const maths::Point3<double> &Camera::position() const {
+    return _position;
+}
+
+maths::Vector3<double> &Camera::angle() {
+    return _angle;
+}
+
+const maths::Vector3<double> &Camera::angle() const {
+    return _angle;
+}
+
+maths::Vector2<size_t> &Camera::resolution() {
+    return _resolution;
+}
+
+const maths::Vector2<size_t> &Camera::resolution() const {
+    return _resolution;
+}
+
+double &Camera::fov() {
+    return _fov;
+}
+
+const double &Camera::fov() const {
+    return _fov;
+}
+
+}  // namespace rtx::scene
