@@ -43,6 +43,8 @@ class Image final {
     void setRegion(maths::Point2<std::size_t> point, const Image &image);
     void clear(maths::Vector2<std::size_t> resolution);
 
+    bool writeToFile(const std::string &filename, const std::string &format);
+
     Pixel &at(maths::Point2<std::size_t> point);
     [[nodiscard]] const Pixel &at(maths::Point2<std::size_t> point) const;
 
@@ -50,6 +52,9 @@ class Image final {
     [[nodiscard]] const maths::Vector2<std::size_t> &resolution() const;
 
    private:
+    bool _writePpm(const std::string &filename);
+    bool _writeSfml(const std::string &filename, const std::string &format);
+
     maths::Vector2<std::size_t> _resolution;
     std::vector<Pixel> _pixels;
 };

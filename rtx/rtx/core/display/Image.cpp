@@ -7,8 +7,11 @@
 
 #include "Image.hpp"
 
+#include <SFML/Graphics.hpp>
 #include <cstdint>
 #include <cstring>
+#include <fstream>
+#include <iostream>
 #include <limits>
 
 namespace rtx::display {
@@ -33,6 +36,44 @@ void Image::setRegion(maths::Point2<std::size_t> point, const Image &image) {
 void Image::clear(maths::Vector2<std::size_t> resolution) {
     _pixels.clear();
     _pixels.resize(resolution.x() * resolution.y());
+}
+
+bool Image::writeToFile(const std::string &filename, const std::string &format) {
+    if (format == "ppm") {
+        return _writePpm(filename);
+    } else if (format == "png" || format == "jpg" || format == "bmp") {
+        return _writeSfml(filename, format);
+    } else {
+        std::clog << "Failed to write, unsupported image format: " << format << "\n";
+        return false;
+    }
+}
+
+bool Image::_writePpm(const std::string &filename) {
+    std::ofstream ofs(filename);
+
+    ofs << "P6\n" << _resolution.x() << " " << _resolution.y() << "\n255\n";
+    for (const auto &pixel : _pixels) {
+        ofs << pixel.r() << pixel.g() << pixel.b();
+    }
+
+    return true;
+}
+
+bool Image::_writeSfml(const std::string &filename, const std::string &format) {
+    std::clog << "SFML from Epitech doesn't support writing images :(\n";
+    return false;
+
+    // sf::Image image = sf::Image();
+    // std::vector<uint8_t> buffer;
+
+    // auto *pixels = reinterpret_cast<const uint8_t *>(_pixels.data());
+    // image.create(_resolution.x(), _resolution.y(), pixels);
+    // image.saveToMemory(buffer, format);
+
+    // std::ofstream ofs(filename, std::ios::binary);
+    // ofs.write(reinterpret_cast<const char *>(buffer.data()), buffer.size());
+    // return true;
 }
 
 Pixel &Image::at(maths::Point2<std::size_t> point) {

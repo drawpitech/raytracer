@@ -6,7 +6,7 @@
 */
 
 #include <rtx/core/config/Config.hpp>
-#include <rtx/core/display/PpmDisplay.hpp>
+#include <rtx/core/display/FileDisplay.hpp>
 #include <rtx/core/display/SfmlDisplay.hpp>
 #include <rtx/core/display/renderer/Renderer.hpp>
 #include <rtx/core/scene/Camera.hpp>
@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include "Args.hpp"
+#include "rtx/core/display/FileDisplay.hpp"
 
 namespace {
 int raytracer(const Args &args) {
@@ -28,9 +29,13 @@ int raytracer(const Args &args) {
     std::unique_ptr<display::IDisplay> display;
 
     if (args.getDisplay() == "sfml") {
-        display = std::make_unique<display::SfmlDisplay>(camera.resolution());
-    } else if (args.getDisplay() == "ppm") {
-        display = std::make_unique<display::PpmDisplay>(camera.resolution(), args.getOutputFile());
+        display = std::make_unique<display::SfmlDisplay>(
+            camera.resolution(), args.getConfig(), args.getFileName(), args.getFileFormat()
+        );
+    } else if (args.getDisplay() == "file") {
+        display = std::make_unique<display::FileDisplay>(
+            camera.resolution(), args.getFileName(), args.getFileFormat()
+        );
     } else {
         throw std::runtime_error("Unknown display type: " + args.getDisplay());
     }

@@ -15,10 +15,10 @@
 
 namespace rtx::display {
 
-class PpmDisplay final : public IDisplay {
+class FileDisplay final : public IDisplay {
    public:
-    PpmDisplay(maths::Vector2<std::size_t> resolution, std::string filename)
-        : _image{resolution}, _filename{std::move(filename)} {}
+    FileDisplay(maths::Vector2<std::size_t> resolution, std::string filename, std::string format)
+        : _image{resolution}, _filename{std::move(filename)}, _format{std::move(format)} {}
 
     void update(maths::Point2<std::size_t> point, const Image &image) override;
     void startRender(Renderer &renderer) override;
@@ -29,6 +29,7 @@ class PpmDisplay final : public IDisplay {
     Image _image;
     std::shared_mutex _image_mutex;
     std::string _filename;
+    std::string _format;
 };
 
 }  // namespace rtx::display

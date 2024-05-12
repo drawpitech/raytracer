@@ -27,6 +27,9 @@ Args::Args(int argc, char **argv) : _argc(argc), _argv(argv) {
             case 'o':
                 _output_file = optarg;
                 break;
+            case 'f':
+                _format = optarg;
+                break;
             case '?':
                 std::cerr << "Unknown option " << optopt << std::endl;
                 break;
@@ -96,6 +99,14 @@ const std::string &Args::getDisplay() const {
     return _display;
 }
 
-const std::string &Args::getOutputFile() const {
-    return _output_file;
+const std::string &Args::getFileFormat() const {
+    return _format;
+}
+
+std::string Args::getFileName() const {
+    if (!_output_file.empty()) {
+        return _output_file;
+    } else {
+        return "image." + _format;
+    }
 }
