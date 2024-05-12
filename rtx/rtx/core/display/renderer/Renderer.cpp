@@ -32,4 +32,12 @@ void Renderer::waitRender() {
     }
 }
 
+scene::Scene &Renderer::scene() {
+    return _scene;
+}
+
+scene::Camera &Renderer::camera() {
+    return _camera;
+}
+
 }  // namespace rtx::display

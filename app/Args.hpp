@@ -27,7 +27,9 @@ class Args {
     void printHelp(std::ostream &stream = std::cout);
 
     [[nodiscard]] bool getHelp();
-    std::string getConfig();
+    [[nodiscard]] const std::string &getConfig() const;
+    [[nodiscard]] const std::string &getDisplay() const;
+    [[nodiscard]] const std::string &getOutputFile() const;
 
    private:
     int _argc;
@@ -35,9 +37,14 @@ class Args {
 
     bool _help = false;
     std::string _config = "scene.cfg";
+    std::string _display = "ppm";
+    std::string _output_file = "image.ppm";
+
     std::vector<Arg> _options = {
         {"help", 'h', no_argument, "show help"},
-        {"config", 'c', required_argument, "specify config file (default is scene.cfg)"}
+        {"config", 'c', required_argument, "specify config file (default is scene.cfg)"},
+        {"display", 'd', required_argument, "specify display type (default is ppm)"},
+        {"output", 'o', required_argument, "specify output file (default is image.ppm)"}
     };
 
     std::unique_ptr<struct option[]> _getoptOptions();

@@ -39,7 +39,9 @@ void RenderPool::cancel() {
 
 void RenderPool::join() {
     for (auto &thread : _threads) {
-        thread.join();
+        if (thread.joinable()) {
+            thread.join();
+        }
     }
 }
 

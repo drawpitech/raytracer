@@ -7,6 +7,7 @@
 
 #include <rtx/core/config/Config.hpp>
 #include <rtx/core/display/PpmDisplay.hpp>
+#include <rtx/core/display/SfmlDisplay.hpp>
 #include <rtx/core/display/renderer/Renderer.hpp>
 #include <rtx/core/scene/Camera.hpp>
 #include <rtx/core/scene/Scene.hpp>
@@ -17,29 +18,27 @@
 #include "Args.hpp"
 
 namespace {
-void raytracer(const std::string &config_file) {
-    rtx::config::Config config(config_file);
+int raytracer(const Args &args) {
+    using namespace rtx;
+
+    rtx::config::Config config(args.getConfig());
     auto scene = config.parseScene();
     auto camera = config.parseCamera();
 
-    rtx::display::PpmDisplay display{camera.resolution()};
-    rtx::display::Renderer renderer{std::move(scene), camera, &display};
+    std::unique_ptr<display::IDisplay> display;
 
-    std::cout << "Rendering ..."
-              << "\n";
-    renderer.startRender();
+    if (args.getDisplay() == "sfml") {
+        display = std::make_unique<display::SfmlDisplay>(camera.resolution());
+    } else if (args.getDisplay() == "ppm") {
+        display = std::make_unique<display::PpmDisplay>(camera.resolution(), args.getOutputFile());
+    } else {
+        throw std::runtime_error("Unknown display type: " + args.getDisplay());
+    }
 
-    std::jthread rt([&display](const std::stop_token &stop_token) {
-        using namespace std::chrono_literals;
+    display::Renderer renderer{std::move(scene), camera, display.get()};
+    display->startRender(renderer);
 
-        while (!stop_token.stop_requested()) {
-            display.write("image.ppm");
-            std::this_thread::sleep_for(100ms);
-        }
-    });
-
-    renderer.waitRender();
-    display.write("image.ppm");
+    return 0;
 }
 }  // namespace
 
@@ -50,7 +49,8 @@ int main(int argc, char *argv[]) {
             args.printHelp();
             return 0;
         }
-        raytracer(args.getConfig());
+
+        return raytracer(args);
     } catch (const std::exception &e) {
         std::cerr << "A fatal error occurred: " << e.what() << "\n";
         return 84;

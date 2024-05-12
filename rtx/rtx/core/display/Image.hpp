@@ -21,12 +21,10 @@ class Pixel final {
    public:
     Pixel() = default;
 
-    Pixel(std::uint32_t value) : _value{value} {}
-
     Pixel(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 255);
     Pixel(const render::Color &color);
 
-    [[nodiscard]] uint32_t value() const;
+    [[nodiscard]] std::array<std::uint8_t, 4> value() const;
 
     [[nodiscard]] uint8_t r() const;
     [[nodiscard]] uint8_t g() const;
@@ -34,7 +32,7 @@ class Pixel final {
     [[nodiscard]] uint8_t a() const;
 
    private:
-    std::uint32_t _value;
+    std::array<std::uint8_t, 4> _value;
 };
 
 class Image final {

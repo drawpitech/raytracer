@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <limits>
 
 namespace rtx::display {
 
@@ -50,34 +51,33 @@ const maths::Vector2<std::size_t> &Image::resolution() const {
     return _resolution;
 }
 
-Pixel::Pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-    : _value{static_cast<uint32_t>((r << 24) | (g << 16) | (b << 8) | a)} {}
+Pixel::Pixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : _value{{r, g, b, a}} {}
 
-Pixel::Pixel(const render::Color &color) {
-    auto r = static_cast<uint32_t>(color.r() * 255.999);
-    auto g = static_cast<uint32_t>(color.g() * 255.999);
-    auto b = static_cast<uint32_t>(color.b() * 255.999);
-    _value = (r << 24) | (g << 16) | (b << 8) | 255;
+Pixel::Pixel(const render::Color &color) : _value() {
+    auto r = static_cast<uint8_t>(color.r() * 255.999);
+    auto g = static_cast<uint8_t>(color.g() * 255.999);
+    auto b = static_cast<uint8_t>(color.b() * 255.999);
+    _value = {r, g, b, std::numeric_limits<uint8_t>::max()};
 }
 
-uint32_t Pixel::value() const {
+std::array<std::uint8_t, 4> Pixel::value() const {
     return _value;
 }
 
 uint8_t Pixel::r() const {
-    return static_cast<uint8_t>(_value >> 24);
+    return _value[0];
 }
 
 uint8_t Pixel::g() const {
-    return static_cast<uint8_t>((_value >> 16) & 0xFF);
+    return _value[1];
 }
 
 uint8_t Pixel::b() const {
-    return static_cast<uint8_t>((_value >> 8) & 0xFF);
+    return _value[2];
 }
 
 uint8_t Pixel::a() const {
-    return static_cast<uint8_t>(_value & 0xFF);
+    return _value[3];
 }
 
 }  // namespace rtx::display

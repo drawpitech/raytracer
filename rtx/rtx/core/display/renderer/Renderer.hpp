@@ -33,6 +33,9 @@ class Renderer final {
     void cancelRender();
     void waitRender();
 
+    [[nodiscard]] scene::Scene &scene();
+    [[nodiscard]] scene::Camera &camera();
+
    private:
     scene::Scene _scene;
     scene::Camera _camera;

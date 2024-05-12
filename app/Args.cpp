@@ -21,6 +21,12 @@ Args::Args(int argc, char **argv) : _argc(argc), _argv(argv) {
             case 'c':
                 _config = optarg;
                 break;
+            case 'd':
+                _display = optarg;
+                break;
+            case 'o':
+                _output_file = optarg;
+                break;
             case '?':
                 std::cerr << "Unknown option " << optopt << std::endl;
                 break;
@@ -82,6 +88,14 @@ bool Args::getHelp() {
     return _help;
 }
 
-std::string Args::getConfig() {
+const std::string &Args::getConfig() const {
     return _config;
+}
+
+const std::string &Args::getDisplay() const {
+    return _display;
+}
+
+const std::string &Args::getOutputFile() const {
+    return _output_file;
 }
