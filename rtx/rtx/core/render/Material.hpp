@@ -13,9 +13,9 @@
 
 namespace rtx::render {
 
-class Materials {
+class Material {
    public:
-    explicit Materials(const Color &diffuse);
+    explicit Material(const Color &diffuse);
 
     [[nodiscard]] Color render(const Hitpoint &hitpoint, const scene::SceneRef &scene) const;
 

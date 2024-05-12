@@ -56,8 +56,8 @@ render::Color Config::parseColor(const libconfig::Setting &obj) {
     };
 }
 
-render::Materials Config::parseMaterial(const libconfig::Setting &obj) {
-    return render::Materials{parseColor(Config::lookup("diffuse", obj))};
+render::Material Config::parseMaterial(const libconfig::Setting &obj) {
+    return render::Material{parseColor(Config::lookup("diffuse", obj))};
 }
 
 scene::Camera Config::parseCamera() const {

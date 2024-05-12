@@ -16,7 +16,7 @@ concept NonNarrowingConvertibleTo =
                                       requires(From from) { To{from}; });
 
 template <typename T, typename U>
-concept Multiplicable = requires(T a, U b) { a *b; };
+concept Multiplicable = requires(T a, U b) { a * b; };
 
 template <typename T, typename U>
     requires Multiplicable<T, U>

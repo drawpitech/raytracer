@@ -23,7 +23,8 @@ void raytracer() {
     rtx::display::PpmDisplay display{camera.resolution()};
     rtx::display::Renderer renderer{std::move(scene), camera, &display};
 
-    std::cout << "Rendering ..." << std::endl;
+    std::cout << "Rendering ..."
+              << "\n";
     renderer.startRender();
 
     std::jthread rt([&display](const std::stop_token &stop_token) {
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]) {
     try {
         raytracer();
     } catch (const std::exception &e) {
-        std::cerr << "A fatal error occurred: " << e.what() << std::endl;
+        std::cerr << "A fatal error occurred: " << e.what() << "\n";
         return 84;
     }
 }

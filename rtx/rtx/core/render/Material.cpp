@@ -5,22 +5,24 @@
 ** Materials.cpp
 */
 
-#include "Materials.hpp"
+#include <rtx/core/scene/Scene.hpp>
 
 #include <algorithm>
 
+#include "Material.hpp"
+
 namespace rtx::render {
 
-Materials::Materials(const Color &diffuse) : _diffuse{diffuse} {}
+Material::Material(const Color &diffuse) : _diffuse{diffuse} {}
 
-Color Materials::render(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
+Color Material::render(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
     if (std::holds_alternative<scene::settings::FastRenderConfig>(scene.config())) {
         return fastRender(hitpoint, scene);
     }
     return {0, 0, 0};
 }
 
-Color Materials::fastRender(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
+Color Material::fastRender(const Hitpoint &hitpoint, const scene::SceneRef &scene) const {
     auto c_light = Color{0, 0, 0};
     double weight = 0;
 
@@ -32,7 +34,7 @@ Color Materials::fastRender(const Hitpoint &hitpoint, const scene::SceneRef &sce
         ) ||
         std::ranges::all_of(scene.lights(), [hitpoint, scene](const auto &light) {
             return scene.objects()
-                .hit({hitpoint.point(), -light->direction()}, hitpoint.object())
+                .hit_ignore({hitpoint.point(), -light->direction()}, hitpoint.object())
                 .has_value();
         })) {
         return _diffuse * scene.ambientLight().color * scene.ambientLight().intensity;
@@ -40,8 +42,9 @@ Color Materials::fastRender(const Hitpoint &hitpoint, const scene::SceneRef &sce
     int i = 0;
     for (const auto &light : scene.lights()) {
         auto angle = hitpoint.normal().dot(-light->direction());
-        if (angle > 0 &&
-            !scene.objects().hit({hitpoint.point(), -light->direction()}, hitpoint.object())) {
+        if (angle > 0 && !scene.objects().hit_ignore(
+                             {hitpoint.point(), -light->direction()}, hitpoint.object()
+                         )) {
             i++;
             c_light = {
                 std::max(c_light.r(), angle * light->color().r() * light->intensity()),

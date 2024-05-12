@@ -13,7 +13,7 @@
 
 namespace rtx::scene {
 
-void Scene::addObject(std::unique_ptr<render::IObject> object) {
+void Scene::addObject(std::unique_ptr<shapes::AObject> object) {
     _objects.emplace_back(std::move(object));
 }
 

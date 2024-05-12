@@ -93,6 +93,13 @@ class Vector3 {
         return {_x * v, _y * v, _z * v};
     }
 
+    // Ne marche pas avec gcc
+    // template <Multiplicable<T> U>
+    // friend constexpr Vector3<multiplication_result_t<T, U>>
+    // operator*(const U v, const Vector3 &v3) {
+    //     return {v3.x() * v, v3.y() * v, v3.z() * v};
+    // }
+
     template <Divisable<T> U>
     constexpr Vector3<division_result_t<T, U>> operator/(const U v) const {
         return {_x / v, _y / v, _z / v};
@@ -101,6 +108,11 @@ class Vector3 {
     template <Multiplicable<T> U>
     constexpr multiplication_result_t<T, U> dot(const Vector3<U> &v) const {
         return _x * v.x() + _y * v.y() + _z * v.z();
+    }
+
+    template <Multiplicable<T> U>
+    constexpr Vector3<multiplication_result_t<T, U>> cross(const Vector3<U> &v) const {
+        return {_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()};
     }
 
     constexpr T norm() const {

@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include <rtx/core/render/Sphere.hpp>
+#include <rtx/core/render/AmbientLight.hpp>
+#include <rtx/core/render/DirectionalLights.hpp>
+#include <rtx/core/shapes/AObject.hpp>
 
 #include <functional>
 #include <libconfig.h++>
@@ -18,18 +20,18 @@
 namespace rtx::config {
 class ConfigFactory {
    public:
-    static std::unique_ptr<render::IObject>
+    static std::unique_ptr<rtx::shapes::AObject>
     getObj(const std::string &type, const libconfig::Setting &obj);
     static std::unique_ptr<render::DirectionalLight> getLight(const libconfig::Setting &obj);
     static render::AmbientLight parseAmbientLight(const libconfig::Setting &obj);
 
    private:
     template <typename T>
-    static std::unique_ptr<render::IObject> getObj(const libconfig::Setting &obj);
+    static std::unique_ptr<rtx::shapes::AObject> getObj(const libconfig::Setting &obj);
 
     static const std::map<
         std::string,
-        std::function<std::unique_ptr<render::IObject>(const libconfig::Setting &)>>
+        std::function<std::unique_ptr<rtx::shapes::AObject>(const libconfig::Setting &)>>
         OBJECTS_MAP;
 };
 }  // namespace rtx::config

@@ -76,6 +76,8 @@ class Point3 {
     T _z;
 };
 
+constexpr Point3<double> VORIGIN{0, 0, 0};
+
 template <typename T>
 class Point2 {
    public:

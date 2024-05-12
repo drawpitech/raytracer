@@ -9,6 +9,7 @@
 
 #include <rtx/core/scene/Camera.hpp>
 #include <rtx/core/scene/Scene.hpp>
+#include <rtx/core/render/Material.hpp>
 
 #include <libconfig.h++>
 #include <string>
@@ -42,7 +43,7 @@ class Config {
     }
 
     static render::Color parseColor(const libconfig::Setting &obj);
-    static render::Materials parseMaterial(const libconfig::Setting &obj);
+    static render::Material parseMaterial(const libconfig::Setting &obj);
     [[nodiscard]] scene::Camera parseCamera() const;
     static scene::RenderConfig parseRenderConfig(const libconfig::Setting &obj);
     [[nodiscard]] scene::Scene parseScene() const;

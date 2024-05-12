@@ -28,7 +28,7 @@ maths::Ray3<double> Viewport::ray(maths::Point2<double> point) const {
         std::clog << "Generated ray is out of the viewport\n";
     }
 
-    return {_position, _position.vectorTo(_origin + _down * (point.y()) + _right * (point.x()))};
+    return {_position, _position.vectorTo(_origin + (_down * point.y() + _right * point.x()))};
 }
 
 }  // namespace rtx::scene

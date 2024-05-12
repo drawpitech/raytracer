@@ -17,7 +17,7 @@ namespace rtx::maths {
 template <typename T>
 class Ray3 {
    public:
-    Ray3(Point3<T> origin, Vector3<T> direction) : _origin{origin}, _direction{direction} {}
+    Ray3(Point3<T> origin, Vector3<T> direction) : _origin{origin}, _direction{direction.normalized()} {}
 
     Point3<T> &origin() {
         return _origin;

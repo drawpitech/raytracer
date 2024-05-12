@@ -9,7 +9,7 @@
 
 #include <rtx/maths/Random.hpp>
 
-#include "Materials.hpp"
+#include "Material.hpp"
 
 namespace rtx::render {
 

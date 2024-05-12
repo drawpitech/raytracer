@@ -7,9 +7,13 @@
 
 #include "Sphere.hpp"
 
-namespace rtx::render {
+namespace rtx::shapes {
 
-Sphere::Sphere(const maths::Point3<double> &center, double radius, const Materials &material)
+Sphere::Sphere(
+    const maths::Point3<double> &center,
+    double radius,
+    const render::Material &material
+)
     : _center{center}, _radius{radius}, _material{material} {}
 
 std::optional<render::Hitpoint> Sphere::hit(const maths::Ray3<double> &ray) const {
@@ -32,21 +36,11 @@ std::optional<render::Hitpoint> Sphere::hit(const maths::Ray3<double> &ray) cons
 
     const auto direction = _radius > oc.norm() ? -1 : 1;
     const maths::Point3 point = ray.origin() + (ray.direction() * t);
-    return render::Hitpoint{
-        ray, t, point, (_center.vectorTo(point) * direction).normalized(), *this
-    };
+    return render::Hitpoint{ray, t, point, _center.vectorTo(point) * direction, *this};
 }
 
-std::optional<render::Hitpoint>
-Sphere::hit(const maths::Ray3<double> &ray, const IRenderable &ignore) const {
-    if (&ignore == this) {
-        return {};
-    }
-    return hit(ray);
-}
-
-const render::Materials &Sphere::material() const {
+const render::Material &Sphere::material() const {
     return _material;
 }
 
-}  // namespace rtx::render
+}  // namespace rtx::shapes

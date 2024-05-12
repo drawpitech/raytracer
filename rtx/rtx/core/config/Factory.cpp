@@ -7,8 +7,10 @@
 
 #include "Factory.hpp"
 
-#include <rtx/core/render/Plane.hpp>
-#include <rtx/core/render/Sphere.hpp>
+#include <rtx/core/shapes/Cylinder.hpp>
+#include <rtx/core/shapes/InfiniteCylinder.hpp>
+#include <rtx/core/shapes/Plane.hpp>
+#include <rtx/core/shapes/Sphere.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -21,7 +23,7 @@
 
 namespace rtx::config {
 
-std::unique_ptr<render::IObject>
+std::unique_ptr<rtx::shapes::AObject>
 ConfigFactory::getObj(const std::string &type, const libconfig::Setting &obj) {
     if (!OBJECTS_MAP.contains(type)) {
         throw std::runtime_error("Unknown object type: " + type);
@@ -30,9 +32,10 @@ ConfigFactory::getObj(const std::string &type, const libconfig::Setting &obj) {
 }
 
 template <>
-std::unique_ptr<render::IObject> ConfigFactory::getObj<render::Sphere>(const libconfig::Setting &obj
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<shapes::Sphere>(
+    const libconfig::Setting &obj
 ) {
-    return std::make_unique<render::Sphere>(
+    return std::make_unique<shapes::Sphere>(
         Config::parsePoint<double>(Config::lookup("position", obj)),
         Config::lookup("radius", obj),
         Config::parseMaterial(Config::lookup("material", obj))
@@ -40,11 +43,49 @@ std::unique_ptr<render::IObject> ConfigFactory::getObj<render::Sphere>(const lib
 }
 
 template <>
-std::unique_ptr<render::IObject> ConfigFactory::getObj<render::Plane>(const libconfig::Setting &obj
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::Plane>(
+    const libconfig::Setting &obj
 ) {
-    return std::make_unique<render::Plane>(
+    return std::make_unique<shapes::Plane>(
         Config::parseVector<double>(Config::lookup("normal", obj)),
         Config::parsePoint<double>(Config::lookup("position", obj)),
+        Config::parseMaterial(Config::lookup("material", obj))
+    );
+}
+
+template <>
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::Cylinder>(
+    const libconfig::Setting &obj
+) {
+    return std::make_unique<shapes::Cylinder>(
+        Config::parseVector<double>(Config::lookup("axis", obj)),
+        Config::parsePoint<double>(Config::lookup("position", obj)),
+        Config::lookup("radius", obj),
+        Config::lookup("height", obj),
+        Config::parseMaterial(Config::lookup("material", obj))
+    );
+}
+
+template <>
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::Disk>(
+    const libconfig::Setting &obj
+) {
+    return std::make_unique<shapes::Disk>(
+        Config::parseVector<double>(Config::lookup("axis", obj)),
+        Config::parsePoint<double>(Config::lookup("position", obj)),
+        Config::lookup("radius", obj),
+        Config::parseMaterial(Config::lookup("material", obj))
+    );
+}
+
+template <>
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::InfiniteCylinder>(
+    const libconfig::Setting &obj
+) {
+    return std::make_unique<shapes::InfiniteCylinder>(
+        Config::parseVector<double>(Config::lookup("axis", obj)),
+        Config::parsePoint<double>(Config::lookup("position", obj)),
+        Config::lookup("radius", obj),
         Config::parseMaterial(Config::lookup("material", obj))
     );
 }
@@ -64,11 +105,15 @@ render::AmbientLight ConfigFactory::parseAmbientLight(const libconfig::Setting &
     };
 }
 
-const std::
-    map<std::string, std::function<std::unique_ptr<render::IObject>(const libconfig::Setting &)>>
-        ConfigFactory::OBJECTS_MAP = {
-            {"sphere", ConfigFactory::getObj<rtx::render::Sphere>},
-            {"plane", ConfigFactory::getObj<rtx::render::Plane>},
+const std::map<
+    std::string,
+    std::function<std::unique_ptr<rtx::shapes::AObject>(const libconfig::Setting &)>>
+    ConfigFactory::OBJECTS_MAP = {
+        {"sphere", ConfigFactory::getObj<rtx::shapes::Sphere>},
+        {"plane", ConfigFactory::getObj<rtx::shapes::Plane>},
+        {"cylinder", ConfigFactory::getObj<rtx::shapes::Cylinder>},
+        {"infinite_cylinder", ConfigFactory::getObj<rtx::shapes::InfiniteCylinder>},
+        {"disk", ConfigFactory::getObj<rtx::shapes::Disk>},
 };
 
 }  // namespace rtx::config

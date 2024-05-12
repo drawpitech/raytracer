@@ -10,38 +10,28 @@
 namespace rtx::render {
 std::optional<Hitpoint> RenderableVector::hit(const maths::Ray3<double> &ray) const {
     std::optional<Hitpoint> hitpoint;
-    double t = std::numeric_limits<double>::infinity();
     for (const auto &object : *this) {
         const auto hit = object->hit(ray);
-        if (!hit) {
+        if (!hit || hit->distance() < 0 || (hitpoint && hit->distance() > hitpoint->distance())) {
             continue;
         }
-        const auto distance = hit->distance();
-        if (distance > 0.0001 && (!hitpoint || distance < t)) {
-            hitpoint = hit;
-            t = hit->distance();
-        }
+        hitpoint = hit;
     }
     return hitpoint;
 }
 
 std::optional<Hitpoint>
-RenderableVector::hit(const maths::Ray3<double> &ray, const IRenderable &ignore) const {
+RenderableVector::hit_ignore(const maths::Ray3<double> &ray, const IRenderable &ignore) const {
     std::optional<Hitpoint> hitpoint;
-    double t = std::numeric_limits<double>::infinity();
     for (const auto &object : *this) {
         if (object == &ignore) {
             continue;
         }
         const auto hit = object->hit(ray);
-        if (!hit) {
+        if (!hit || hit->distance() < 0 || (hitpoint && hit->distance() > hitpoint->distance())) {
             continue;
         }
-        const auto distance = hit->distance();
-        if (distance > 0 && (!hitpoint || distance < t)) {
-            hitpoint = hit;
-            t = hit->distance();
-        }
+        hitpoint = hit;
     }
     return hitpoint;
 }

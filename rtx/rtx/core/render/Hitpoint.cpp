@@ -6,6 +6,7 @@
 */
 
 #include <rtx/core/render/Hitpoint.hpp>
+#include <rtx/core/shapes/AObject.hpp>
 #include <rtx/maths/Ray.hpp>
 
 namespace rtx::render {
@@ -15,9 +16,13 @@ Hitpoint::Hitpoint(
     const double distance,
     const maths::Point3<double> &point,
     const maths::Vector3<double> &normal,
-    const IObject &object
+    const shapes::AObject &object
 )
-    : _ray{ray}, _distance{distance}, _point{point}, _normal{normal}, _object{&object} {}
+    : _ray{ray},
+      _distance{distance},
+      _point{point},
+      _normal{normal.normalized()},
+      _object{&object} {}
 
 const maths::Ray3<double> &Hitpoint::ray() const {
     return _ray;
@@ -35,7 +40,7 @@ const maths::Vector3<double> &Hitpoint::normal() const {
     return _normal;
 }
 
-const IObject &Hitpoint::object() const {
+const shapes::AObject &Hitpoint::object() const {
     return *_object;
 }
 

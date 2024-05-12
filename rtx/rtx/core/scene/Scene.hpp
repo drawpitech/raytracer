@@ -8,15 +8,15 @@
 #pragma once
 #include <rtx/core/render/AmbientLight.hpp>
 #include <rtx/core/render/DirectionalLights.hpp>
-#include <rtx/core/render/IObject.hpp>
 #include <rtx/core/render/RenderableVector.hpp>
+// #include <rtx/core/shapes/IObject.hpp>
 
 #include <memory>
 #include <variant>
 #include <vector>
 
-namespace rtx::scene {
 
+namespace rtx::scene {
 namespace settings {
 enum class Antialiasing : unsigned char {
     NONE,
@@ -84,7 +84,7 @@ class Scene {
     Scene &operator=(const Scene &) = delete;
     Scene &operator=(Scene &&) = default;
 
-    void addObject(std::unique_ptr<render::IObject> object);
+    void addObject(std::unique_ptr<shapes::AObject> object);
     void addLight(std::unique_ptr<render::DirectionalLight> light);
     void setAmbientLight(render::AmbientLight light);
 
@@ -92,7 +92,7 @@ class Scene {
 
    private:
     RenderConfig _config;
-    std::vector<std::unique_ptr<render::IObject>> _objects;
+    std::vector<std::unique_ptr<shapes::AObject>> _objects;
     std::vector<std::unique_ptr<render::DirectionalLight>> _lights;
     render::AmbientLight _ambient_light{{0, 0, 0}, 0};
 };
