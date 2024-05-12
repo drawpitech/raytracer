@@ -14,9 +14,11 @@
 
 #include <iostream>
 
+#include "Args.hpp"
+
 namespace {
-void raytracer() {
-    rtx::config::Config config("scene.cfg");
+void raytracer(const std::string &config_file) {
+    rtx::config::Config config(config_file);
     auto scene = config.parseScene();
     auto camera = config.parseCamera();
 
@@ -43,7 +45,12 @@ void raytracer() {
 
 int main(int argc, char *argv[]) {
     try {
-        raytracer();
+        Args args(argc, argv);
+        if (args.getHelp()) {
+            args.printHelp();
+            return 0;
+        }
+        raytracer(args.getConfig());
     } catch (const std::exception &e) {
         std::cerr << "A fatal error occurred: " << e.what() << "\n";
         return 84;

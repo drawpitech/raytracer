@@ -1,4 +1,4 @@
-add_executable(raytracer main.cpp)
+add_executable(raytracer main.cpp Args.cpp)
 
 set_target_properties(raytracer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
