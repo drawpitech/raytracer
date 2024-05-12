@@ -115,6 +115,11 @@ class Vector3 {
         return {_y * v.z() - _z * v.y(), _z * v.x() - _x * v.z(), _x * v.y() - _y * v.x()};
     }
 
+    template <std::equality_comparable_with<T> U>
+    constexpr bool operator==(const Vector3<U> &v) const {
+        return _x == v.x() && _y == v.y() && _z == v.z();
+    }
+
     constexpr T norm() const {
         return std::sqrt(_x * _x + _y * _y + _z * _z);
     }

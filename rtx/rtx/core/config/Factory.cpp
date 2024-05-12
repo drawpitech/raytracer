@@ -7,6 +7,7 @@
 
 #include "Factory.hpp"
 
+#include <rtx/core/shapes/Cone.hpp>
 #include <rtx/core/shapes/Cylinder.hpp>
 #include <rtx/core/shapes/InfiniteCylinder.hpp>
 #include <rtx/core/shapes/Plane.hpp>
@@ -90,6 +91,18 @@ std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::Infinit
     );
 }
 
+template <>
+std::unique_ptr<rtx::shapes::AObject> ConfigFactory::getObj<rtx::shapes::Cone>(
+    const libconfig::Setting &obj
+) {
+    return std::make_unique<shapes::Cone>(
+        Config::parseVector<double>(Config::lookup("axis", obj)),
+        Config::parsePoint<double>(Config::lookup("position", obj)),
+        Config::lookup("radius", obj),
+        Config::parseMaterial(Config::lookup("material", obj))
+    );
+}
+
 std::unique_ptr<render::DirectionalLight> ConfigFactory::getLight(const libconfig::Setting &obj) {
     return std::make_unique<render::DirectionalLight>(
         Config::parseVector<double>(Config::lookup("direction", obj)),
@@ -114,6 +127,7 @@ const std::map<
         {"cylinder", ConfigFactory::getObj<rtx::shapes::Cylinder>},
         {"infinite_cylinder", ConfigFactory::getObj<rtx::shapes::InfiniteCylinder>},
         {"disk", ConfigFactory::getObj<rtx::shapes::Disk>},
+        {"cone", ConfigFactory::getObj<rtx::shapes::Cone>},
 };
 
 }  // namespace rtx::config

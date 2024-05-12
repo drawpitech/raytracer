@@ -17,7 +17,8 @@ namespace rtx::maths {
 template <typename T>
 class Ray3 {
    public:
-    Ray3(Point3<T> origin, Vector3<T> direction) : _origin{origin}, _direction{direction.normalized()} {}
+    Ray3(Point3<T> origin, Vector3<T> direction)
+        : _origin{origin}, _direction{direction.normalized()} {}
 
     Point3<T> &origin() {
         return _origin;
@@ -33,6 +34,10 @@ class Ray3 {
 
     [[nodiscard]] const Vector3<T> &direction() const {
         return _direction;
+    }
+
+    Point3<T> at(const double t) const {
+        return _origin + _direction * t;
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Ray3 &r) {

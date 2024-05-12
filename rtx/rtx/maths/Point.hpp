@@ -42,23 +42,16 @@ class Point3 {
         return _z;
     }
 
-    // Point3 &operator+=(const Vector3<T> &p) {
-    //     _x += p.x();
-    //     _y += p.y();
-    //     _z += p.z();
-    //     return *this;
-    // }
-    // Point3 &operator-=(const Vector3<T> &p) {
-    //     _x -= p.x();
-    //     _y -= p.y();
-    //     _z -= p.z();
-    //     return *this;
-    // }
     Point3 operator+(const Vector3<T> &p) const {
         return {_x + p.x(), _y + p.y(), _z + p.z()};
     }
 
     Point3 operator-(const Vector3<T> &p) const {
+        return {_x - p.x(), _y - p.y(), _z - p.z()};
+    }
+
+    template <Substractable<T> U>
+    Vector3<substraction_result_t<T, U>> operator-(Point3<U> p) const {
         return {_x - p.x(), _y - p.y(), _z - p.z()};
     }
 
