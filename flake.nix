@@ -18,7 +18,7 @@
 
         packages = let
           build = type: sanitizer:
-            pkgs.stdenv.mkDerivation rec {
+            pkgs.stdenv.mkDerivation {
               name = "raytracer";
               src = ./.;
 
@@ -26,13 +26,8 @@
                 "-DCMAKE_BUILD_TYPE=${type}"
                 "-DSANITIZER=${sanitizer}"
               ];
-              nativeBuildInputs = with pkgs; [cmake libconfig];
+              nativeBuildInputs = with pkgs; [cmake libconfig sfml];
               buildInputs = with pkgs; [pkg-config];
-
-              installPhase = ''
-                mkdir -p $out/bin
-                install -D ${name} $out/bin
-              '';
 
               enableParallelBuilding = true;
             };
